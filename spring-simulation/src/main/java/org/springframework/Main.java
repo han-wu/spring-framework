@@ -17,7 +17,7 @@ public class Main {
 		Student student = applicationContext.getBean("student", Student.class);
 		applicationContext = new AnnotationConfigApplicationContext("org.springframework.beans");
 		Teacher teacher = applicationContext.getBean("teacher", Teacher.class);
-		System.out.println("student = " + student);
+//		System.out.println("student = " + student);
 		System.out.println("teacher = " + teacher);
 	}
 }
