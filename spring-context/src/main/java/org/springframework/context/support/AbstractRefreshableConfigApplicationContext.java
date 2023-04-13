@@ -78,6 +78,8 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 			Assert.noNullElements(locations, "Config locations must not be null");
 			this.configLocations = new String[locations.length];
 			for (int i = 0; i < locations.length; i++) {
+				//设置当前类String[] configLocations = [classpath:spring-beans.xml]
+				//resolvePath最主要用来处理location中的${}形式的占位符
 				this.configLocations[i] = resolvePath(locations[i]).trim();
 			}
 		}
@@ -122,6 +124,17 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 	 * @see org.springframework.core.env.Environment#resolveRequiredPlaceholders(String)
 	 */
 	protected String resolvePath(String path) {
+		/*
+		 * getEnvironment().resolveRequiredPlaceholders(path)做了两件事
+		 * 1. 创建 StandardEnvironment 实例，并初始化其父类 AbstractEnvironment 的propertySources、propertyResolver两个属性
+		 * 2. 调用AbstractEnvironment的resolveRequiredPlaceholders方法
+		 *
+		 * 调用StandardEnvironment类的resolveRequiredPlaceholders(path)方法，该方法实际上继承自StandardEnvironment类的父类AbstractEnvironment
+		 * getEnvironment() = new StandardEnvironment()，但在创建StandardEnvironment实例时，会先调用其父类AbstractEnvironment的无参构造完成父类初始化
+		 * 在AbstractEnvironment的无参构造函数中，初始化该类属性propertySources、propertyResolver，并将System.getProperties()与System.getEnv()两个环境变量添加到propertySources
+		 * propertySources = new MutablePropertySources()
+		 * propertyResolver = new PropertySourcesPropertyResolver(propertySources)
+		 */
 		return getEnvironment().resolveRequiredPlaceholders(path);
 	}
 

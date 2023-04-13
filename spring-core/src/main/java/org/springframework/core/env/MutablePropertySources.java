@@ -16,14 +16,14 @@
 
 package org.springframework.core.env;
 
+import org.springframework.lang.Nullable;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
-
-import org.springframework.lang.Nullable;
 
 /**
  * The default implementation of the {@link PropertySources} interface.
@@ -114,6 +114,7 @@ public class MutablePropertySources implements PropertySources {
 	 */
 	public void addLast(PropertySource<?> propertySource) {
 		synchronized (this.propertySourceList) {
+			//this.propertySourceList.remove(propertySource);
 			removeIfPresent(propertySource);
 			this.propertySourceList.add(propertySource);
 		}

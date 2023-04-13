@@ -16,22 +16,17 @@
 
 package org.springframework.core.env;
 
-import java.security.AccessControlException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.core.SpringProperties;
 import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import java.security.AccessControlException;
+import java.util.*;
 
 /**
  * Abstract base class for {@link Environment} implementations. Supports the notion of
@@ -121,6 +116,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * @see #customizePropertySources(MutablePropertySources)
 	 */
 	public AbstractEnvironment() {
+		// 调用有参构造，并新建MutablePropertySources实例作为参数传入
 		this(new MutablePropertySources());
 	}
 
@@ -135,8 +131,11 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * @see #customizePropertySources(MutablePropertySources)
 	 */
 	protected AbstractEnvironment(MutablePropertySources propertySources) {
+		// this.propertySources = new MutablePropertySources()
 		this.propertySources = propertySources;
+		// this.propertyResolver = new PropertySourcesPropertyResolver(propertySources)
 		this.propertyResolver = createPropertyResolver(propertySources);
+		// 将java环境变量及系统环境变量添加到propertySources
 		customizePropertySources(propertySources);
 	}
 
@@ -241,6 +240,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * @see org.springframework.context.ApplicationContextInitializer
 	 */
 	protected void customizePropertySources(MutablePropertySources propertySources) {
+		//模版方法，最终调用子类StandardEnvironment的customizePropertySources方法
 	}
 
 	/**
@@ -627,6 +627,8 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 
 	@Override
 	public String resolveRequiredPlaceholders(String text) throws IllegalArgumentException {
+		// propertyResolver属性在该类无参构造中进行类初始化，this.propertyResolver = new PropertySourcesPropertyResolver(propertySources)
+		//resolveRequiredPlaceholders方法继承自PropertySourcesPropertyResolver的父类AbstractPropertyResolver
 		return this.propertyResolver.resolveRequiredPlaceholders(text);
 	}
 
