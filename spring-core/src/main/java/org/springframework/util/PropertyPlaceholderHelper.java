@@ -16,16 +16,11 @@
 
 package org.springframework.util;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.lang.Nullable;
+
+import java.util.*;
 
 /**
  * Utility class for working with Strings that have placeholder values in them.
@@ -122,6 +117,7 @@ public class PropertyPlaceholderHelper {
 	 * @return the supplied value with placeholders replaced inline
 	 */
 	public String replacePlaceholders(String value, PlaceholderResolver placeholderResolver) {
+		// 这里的 placeholderResolver等同于PropertySourcesPropertyResolver的getPropertyAsRawString方法
 		Assert.notNull(value, "'value' must not be null");
 		return parseStringValue(value, placeholderResolver, null);
 	}
@@ -131,11 +127,13 @@ public class PropertyPlaceholderHelper {
 
 		int startIndex = value.indexOf(this.placeholderPrefix);
 		if (startIndex == -1) {
+			// 未匹配到${前缀返回待匹配内容
 			return value;
 		}
 
 		StringBuilder result = new StringBuilder(value);
 		while (startIndex != -1) {
+			//匹配到${前缀
 			int endIndex = findPlaceholderEndIndex(result, startIndex);
 			if (endIndex != -1) {
 				String placeholder = result.substring(startIndex + this.placeholderPrefix.length(), endIndex);
@@ -147,9 +145,9 @@ public class PropertyPlaceholderHelper {
 					throw new IllegalArgumentException(
 							"Circular placeholder reference '" + originalPlaceholder + "' in property definitions");
 				}
-				// Recursive invocation, parsing placeholders contained in the placeholder key.
+				// 递归调用parseStringValue方法解析占位符
 				placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);
-				// Now obtain the value for the fully resolved key...
+				// 开始替换占位符内容，这里实际调用的是PropertySourcesPropertyResolver的getPropertyAsRawString方法
 				String propVal = placeholderResolver.resolvePlaceholder(placeholder);
 				if (propVal == null && this.valueSeparator != null) {
 					int separatorIndex = placeholder.indexOf(this.valueSeparator);

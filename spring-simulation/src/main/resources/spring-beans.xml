@@ -4,7 +4,7 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean name="student" class="org.springframework.beans.Student">
-		<property name="name" value="张三"/>
+		<property name="name" value="${name}"/>
 		<property name="age" value="30"/>
 		<property name="addr" value="中国北京"/>
 	</bean>

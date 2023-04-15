@@ -206,8 +206,8 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 		if (this.strictHelper == null) {
 			/*
 			 * this.strictHelper = new PropertyPlaceholderHelper(this.placeholderPrefix, this.placeholderSuffix,
-			 *	 										this.valueSeparator, ignoreUnresolvablePlaceholders)
-			 */
+			 *	 this.valueSeparator, ignoreUnresolvablePlaceholders)
+			*/
 			this.strictHelper = createPlaceholderHelper(false);
 		}
 		return doResolvePlaceholders(text, this.strictHelper);
@@ -239,7 +239,26 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 	}
 
 	private String doResolvePlaceholders(String text, PropertyPlaceholderHelper helper) {
-		// helper = PropertyPlaceholderHelper 实例
+		// helper = PropertyPlaceholderHelper实例
+		/*
+		* replacePlaceholders(String value, PlaceholderResolver placeholderResolver)
+		*
+		* 该方法是第二个参数placeholderResolver是PropertyPlaceholderHelper类中的一个函数式接口
+		*
+		* 	@FunctionalInterface
+		* 	public interface PlaceholderResolver {
+		* 		String resolvePlaceholder(String placeholderName);
+		* 	}
+		*
+		* this::getPropertyAsRawString 等同于lambda实现
+		* placeholderName -> 任意代码
+		*
+		* 因此这里通过模版方法传入子类PropertySourcesPropertyResolver的getPropertyAsRawString方法，和上面的lambda表达式一致。
+		* protected String getPropertyAsRawString(String key) {
+		* 	return getProperty(key, String.class, false);
+		* }
+		*
+		*/
 		return helper.replacePlaceholders(text, this::getPropertyAsRawString);
 	}
 

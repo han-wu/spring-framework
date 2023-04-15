@@ -140,7 +140,7 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 			throws BeansException {
 
 		//一级一级往上调用父类的构造函数，一直到AbstractApplicationContext类的构造函数
-		//最终用来初始化AbstractApplicationContext实例的 resourcePatternResolver = new PathMatchingResourcePatternResolver(this)
+		//该方法用来初始化AbstractApplicationContext实例的 resourcePatternResolver = new PathMatchingResourcePatternResolver(this)
 		super(parent);
 		//方法继承自二级父类AbstractRefreshableConfigApplicationContext
 		//初始化AbstractRefreshableConfigApplicationContext类的属性configLocations字符串数组 = configLocations(替换了${}占位符)
